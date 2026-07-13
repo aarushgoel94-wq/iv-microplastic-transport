@@ -1,0 +1,13 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+paper_deliverables/
+Final Results/
+final outcome 2/
+*.pdf
+*.jpeg
+*.png
+Microplastic_Simulation_Colab.ipynb
+run_final_results.py
+run_final_outcome2.py
