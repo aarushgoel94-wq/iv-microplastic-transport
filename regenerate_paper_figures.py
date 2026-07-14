@@ -425,6 +425,9 @@ def tier21_phi_sweep(env: TubeEnvironment) -> None:
 
     write_csv(OUT / "tables" / "phi_sweep.csv", rows)
 
+    (OUT / "figures").mkdir(parents=True, exist_ok=True)
+    (OUT / "tables").mkdir(parents=True, exist_ok=True)
+
     fig, ax = plt.subplots(figsize=(7, 5.5))
     im = ax.imshow(ratio_grid, origin="lower", cmap="RdYlGn", aspect="auto",
                    vmin=0.8, vmax=max(3.0, float(np.nanmax(ratio_grid))))
