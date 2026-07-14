@@ -11,7 +11,7 @@ Portions of simulation code, figure-generation scripts, and manuscript editing w
 
 4) §Software URL (~line 968 / ~1019)
 https://github.com/aarushgoel94-wq/iv-microplastic-transport
-Tip (main): 745c4c0c10f09b5905c5b143d4dba41ba32ac186
+Tip (main): 665740ba8de2a1acb0e7629e65a667ebbe0cfb75
 Full paste block: docs/SOFTWARE_SECTION.txt and SHIP_NOW.md §1.
 
 5) Dr. Barge city (~line 87)
