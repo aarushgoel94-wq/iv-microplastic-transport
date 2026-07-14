@@ -1,0 +1,18 @@
+ADMIN LINES FOR main.tex (paste)
+
+1) Lateral kick (~line 757)
+Lateral Brownian kicks use the Stokes–Einstein step √(2 D Δt) with D = k_B T / (6 π μ r) at T = 310 K; the earlier size-independent lateral_kick_std_m = 4×10⁻⁷ m was removed.
+
+2) Where δ_w = 300 µm came from (~line 1310)
+The near-wall hazard half-width δ_w = 300 µm is a modelling choice (≈ 7.5% of the 4 mm bore per wall), not a measured adhesion-layer thickness; the δ_w sweep shows retention tracks 2δ_w/W for sub-20 µm fragments, so the operating-point retention is set by that geometric band rather than by an independent stickiness parameter.
+
+3) AI disclosure (~line 192)
+Portions of simulation code, figure-generation scripts, and manuscript editing were assisted by the Cursor AI coding assistant. All physical model choices, parameter values, experimental design, data, and scientific conclusions are the author's and were verified by the author.
+
+4) §Software URL (~line 968)
+Still needs your public GitHub URL + commit SHA after push. Template in docs/SOFTWARE_SECTION.txt.
+
+5) Dr. Barge city (~line 87)
+Ask him — Deerfield, Illinois (Baxter HQ) is flagged, not confirmed.
+
+6) Refs — see REFERENCES_CHECKLIST.txt; open PDFs yourself.

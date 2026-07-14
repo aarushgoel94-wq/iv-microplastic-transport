@@ -8,6 +8,10 @@ final outcome 2/
 *.pdf
 *.jpeg
 *.png
+!figs/*.png
+PAPER_ATTACHMENTS/
+.env
+.env.*
 Microplastic_Simulation_Colab.ipynb
 run_final_results.py
 run_final_outcome2.py

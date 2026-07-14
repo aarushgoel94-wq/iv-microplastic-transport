@@ -1,0 +1,32 @@
+REFERENCES — candidates for you to CONFIRM by opening the source
+
+Do NOT paste these until you have actually looked at the document.
+
+[5] USP ⟨788⟩ Particulate Matter in Injections
+    Official text lives in USP–NF Online (paywalled). I cannot see which edition
+    YOU consulted. If you used the current online official text, a defensible form is:
+      United States Pharmacopeia. ⟨788⟩ Particulate Matter in Injections.
+      In: USP–NF [online]. Rockville, MD: United States Pharmacopeial Convention.
+    Then add the *edition / revision date printed on the page you opened*.
+    There is also a public revision PDF from USPNF (search: revisionGeneralChapter788.pdf)
+    — if that is what you used, cite that revision’s printed year, not a guess.
+
+[6] ISO 8536 — Infusion equipment for medical use
+    The part that matches gravity-feed / single-use infusion sets is:
+      ISO 8536-4:2019, Infusion equipment for medical use — Part 4:
+      Infusion sets for single use, gravity feed. Sixth edition, 2019-09.
+    Confirm on iso.org/standard/70730.html against the copy you opened.
+    (If you meant a different part — e.g. filters/Part 8 — cite that instead.)
+
+[11] Replace Hawkins with a specific PP + steam / HSD paper, or CUT.
+    Strongest match for “steam disinfection of polypropylene medical plastics → MPs”:
+      Wang, … et al. (2023). Microplastics released from disposable medical devices
+      and their toxic responses in Caenorhabditis elegans. Environmental Research
+      238, 117345. https://doi.org/10.1016/j.envres.2023.117345
+      (Autoclave / high-temperature steam disinfection of disposable medical devices
+      including PP; quantifies MP release.)
+    Alternative if your claim is only “PP survives autoclave,” not shedding:
+      Fischer, K.M. & Howell, A.P. (2021). Reusability of autoclaved 3D printed
+      polypropylene… 3D Printing in Medicine 7, 20.
+      https://doi.org/10.1186/s41205-021-00111-x
+    Open the PDF, check authors/volume/pages, then replace or delete Hawkins.

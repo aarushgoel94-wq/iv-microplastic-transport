@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -43,6 +43,12 @@ EULER_CFL_FRACTION: float = 0.1
 EULER_WALL_SAFETY: float = 0.25
 DT_MIN: float = 1e-9
 DT_MAX: float = 1e-5
+# fast_mode geometric dt cap at the paper's rapid û = 50 mm/s. Exact Stokes
+# integration is unconditionally stable, so at slower û the same wall-clearance
+# accuracy allows dt ∝ 1/û (e.g. 125 mL/hr ≈ 18× slower → cap ≈ 9×10⁻⁴ s).
+FAST_MODE_DT_CAP_AT_U_REF: float = 5.0e-5
+FAST_MODE_U_REF_M_S: float = 0.05
+FAST_MODE_DT_CAP_MAX: float = 2.0e-3
 MAX_TRAJECTORY_POINTS: int = 10_000  # stored points per trial (plots need far fewer)
 MAX_PHYSICS_STEPS: int = 500_000    # hard cap per trial — prevents Colab timeouts
 DEFAULT_MAX_TIME_S: float = 20.0    # most particles finish within ~5 s simulated time
@@ -110,13 +116,20 @@ class ClinicalRealismConfig:
     temperature_k: float = BODY_TEMPERATURE_K
     size_snag_exponent: float = 0.35
     """Empirical size weight (d/3)^α. Sensitivity: vary α ∈ [0, 1]."""
-    degraded_tubing_multiplier: float = 1.75
-    """Autoclaved / worn tubing: scales adhesion rates only (paired layout keeps same defects)."""
+    degraded_tubing_multiplier: float = 1.0
+    """
+    Wall / adhesion wear factor w. Applied directly to hazard rates (paired layout).
+    Pristine: w=1.0. Autoclaved operating point: w=1.75. Set explicitly in config —
+    do NOT gate on container_key (that bug made Φ_wall sweeps inert).
+    """
     paired_defect_layout: bool = True
     """
-    If True, defect x-positions are drawn with wear=1 (shared layout across P/A);
-    only the adhesion multiplier w differs (1.0 vs degraded_tubing_multiplier).
+    If True, defect x-positions are drawn with density ρ_def·L (shared layout across P/A);
+    only the adhesion multiplier w differs.
     """
+
+
+AUTOCLAVE_WALL_WEAR = 1.75  # operating-point Φ_wall for autoclaved containers
 
 
 DEFAULT_CLINICAL_REALISM = ClinicalRealismConfig()
@@ -143,7 +156,8 @@ class ClinicalRealismContext:
         container_key: str = "pristine",
         shared_defect_x_m: Optional[np.ndarray] = None,
     ) -> ClinicalRealismContext:
-        wear = config.degraded_tubing_multiplier if container_key == "autoclaved" else 1.0
+        # Tier-0 bugfix: w MUST come from the config field itself, never from container_key alone.
+        wear = float(config.degraded_tubing_multiplier)
         if shared_defect_x_m is not None:
             defect_x = np.asarray(shared_defect_x_m, dtype=float)
         elif config.paired_defect_layout:
@@ -1308,6 +1322,19 @@ def verify_parabolic_flow_profile(environment: TubeEnvironment) -> None:
         print(f"    y={label}: u={environment.axial_velocity(y)*1e3:.2f} mm/s")
 
 
+def fast_mode_dt_cap(environment: TubeEnvironment, dt_max: float = DT_MAX) -> float:
+    """
+    Geometric fast_mode Δt ceiling, scaled so wall-clock ∝ campaign length not û.
+
+    At û_ref = 50 mm/s the cap is FAST_MODE_DT_CAP_AT_U_REF (5×10⁻⁵ s). At slower
+    mean speed the exact Stokes integrator stays stable, so the same clearance
+    accuracy permits Δt × (û_ref / û).
+    """
+    base = min(dt_max * 5.0, FAST_MODE_DT_CAP_AT_U_REF)
+    u = max(float(environment.fluid.average_velocity), 1e-12)
+    return float(min(FAST_MODE_DT_CAP_MAX, base * (FAST_MODE_U_REF_M_S / u)))
+
+
 def compute_euler_timestep(
     particle: Particle,
     environment: TubeEnvironment,
@@ -1330,10 +1357,11 @@ def compute_euler_timestep(
       2. Wall approach:      dt ≤ wall_safety × gap_to_wall / |v_y|
       3. Legacy Euler only:    dt ≤ τ / relaxation_steps
 
-    fast_mode raises dt_max slightly (still CFL-limited during motion).
+    fast_mode uses a uniform geometric cap scaled ∝ 1/û (exact Stokes).
     """
+    cap = fast_mode_dt_cap(environment, dt_max) if fast_mode else dt_max
+
     if fixed_dt is not None:
-        cap = dt_max * 5.0 if fast_mode else dt_max
         return float(np.clip(fixed_dt, dt_min, cap))
 
     mu = environment.fluid.dynamic_viscosity
@@ -1349,8 +1377,6 @@ def compute_euler_timestep(
     nearest_wall_gap = max(min(clearance_bottom, clearance_top), 1e-15)
     vertical_speed = max(abs(float(particle.velocity[1])), 1e-12)
     dt_wall = wall_safety * nearest_wall_gap / vertical_speed
-
-    cap = min(dt_max * 5.0, 5.0e-5) if fast_mode else dt_max
 
     if analytic_stokes:
         if fast_mode:
@@ -1588,9 +1614,18 @@ class ExperimentRunner:
         self.data_log = data_log if data_log is not None else ExperimentDataLog()
         self.group_results: List[GroupResult] = []
         self.clinical_realism = clinical_realism
-        self.clinical_config = clinical_config if clinical_config is not None else DEFAULT_CLINICAL_REALISM
         if not clinical_realism:
             self.clinical_config = ClinicalRealismConfig(enabled=False)
+        elif clinical_config is not None:
+            self.clinical_config = clinical_config
+        else:
+            # Default: pristine w=1.0; autoclaved operating point w=1.75
+            w = AUTOCLAVE_WALL_WEAR if container_profile.key == "autoclaved" else 1.0
+            self.clinical_config = replace(
+                DEFAULT_CLINICAL_REALISM,
+                degraded_tubing_multiplier=w,
+                enabled=True,
+            )
 
     def run_group(
         self,

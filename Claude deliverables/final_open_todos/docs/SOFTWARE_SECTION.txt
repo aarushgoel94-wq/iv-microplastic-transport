@@ -1,0 +1,36 @@
+§Software (replace red block ~line 968):
+
+All simulations use a single public repository containing
+microplastic_simulation.py, parameters.yaml, regenerate_paper_figures.py,
+requirements.txt, and README.md. Clone and run:
+
+  pip install -r requirements.txt
+  python regenerate_paper_figures.py
+
+URL: https://github.com/<YOUR_USERNAME>/iv-microplastic-transport
+(Commit SHA: <PASTE AFTER PUSH>)
+
+Contradictory log C_run_log.txt (base_trials=20) was deleted; keep
+C_phi_sweep.txt / C_phi_sweep.csv (base_trials=30, N_esc_P=80).
+
+--- PUSH COMMANDS (gh not installed in this environment) ---
+
+brew install gh && gh auth login    # if needed
+
+cd "/Users/aarushgoel/Microplastics Research"
+# create empty public repo on GitHub first, then:
+git remote add origin https://github.com/<YOUR_USERNAME>/iv-microplastic-transport.git
+git add microplastic_simulation.py parameters.yaml regenerate_paper_figures.py \
+        requirements.txt README.md figs/ "Claude deliverables/"
+git status   # review; do not add secrets
+git commit -m "$(cat <<'EOF'
+Public reproducibility package for IV microplastic transport paper.
+
+EOF
+)"
+git push -u origin main
+git rev-parse HEAD   # paste this SHA into §Software
+
+Self-check:
+  git clone https://github.com/<YOUR_USERNAME>/iv-microplastic-transport /tmp/iv-mp-check
+  cd /tmp/iv-mp-check && pip install -r requirements.txt && python regenerate_paper_figures.py

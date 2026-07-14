@@ -1,0 +1,1 @@
+Lateral kick: REPLACED with Stokes–Einstein sqrt(2*D*dt), D = kB*T/(6*pi*mu*r), T=310 K, size-dependent (ClinicalRealismConfig.use_brownian_kick=True). The old size-independent lateral_kick_std_m=4e-7 was removed.

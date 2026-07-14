@@ -1,0 +1,7 @@
+state,d_um,escape_pct_mean,escape_pct_sd,n_replicates,trials_per_rep
+pristine,3,87.6,7.4,20,25
+pristine,10,87.0,5.0,20,25
+pristine,50,77.0,9.9,20,25
+autoclaved,3,86.2,8.5,20,25
+autoclaved,10,87.0,5.0,20,25
+autoclaved,50,75.6,10.4,20,25

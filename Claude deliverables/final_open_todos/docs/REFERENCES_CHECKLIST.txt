@@ -1,0 +1,33 @@
+Reference verification (YOU must open each PDF before Overleaf ship):
+
+[5] USP ⟨788⟩ Particulate Matter in Injections — cite the specific
+    USP–NF official edition year on your desk (e.g. USP 43–NF 38).
+    Do not invent an edition.
+
+[6] ISO 8536 — Infusion equipment for medical use. Cite the specific
+    part you used (commonly Part 4 for infusion sets, Part 8 for filters)
+    AND the year of the edition you opened.
+
+[7] Maxey, M. R. & Riley, J. J. (1983). Equation of motion for a small
+    rigid sphere in a nonuniform flow. Phys. Fluids 26, 883–889.
+    CONFIRM volume/pages against the PDF; classic Maxey–Riley.
+
+[8] Crowe, C. T., Schwarzkopf, J. D., Sommerfeld, M. & Tsuji, Y. (2011).
+    Multiphase Flows with Droplets and Particles, 2nd ed. CRC Press.
+    CONFIRM edition/year against your copy, or cut if unused.
+
+[9] Happel, J. & Brenner, H. (1983). Low Reynolds Number Hydrodynamics.
+    Martinus Nijhoff. CONFIRM year/publisher against your copy, or cut.
+
+[10] Israelachvili, J. N. Intermolecular and Surface Forces.
+     CONFIRM which edition (3rd ed. 2011 is common) against your copy, or cut.
+
+[11] REPLACE vague “Hawkins” with a specific openable paper, e.g.:
+     Li, D. et al. (2020). Microplastic release from the degradation of
+     polypropylene feeding bottles during infant formula preparation.
+     Nature Food 1, 746–754. https://doi.org/10.1038/s43016-020-00171-y
+     (sterilisation elevates PP microplastic release — open and cite accurately)
+     OR for steam sterilisation of PP medical devices specifically:
+     3D Print Med 2021 autoclaved PP (s41205-021-00111-x) — only if that matches your claim.
+
+Dr. Barge city (main.tex ~line 87): ASK HIM — Deerfield, Illinois is flagged, not confirmed.

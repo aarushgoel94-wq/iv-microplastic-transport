@@ -1,0 +1,9 @@
+FLOW RATE COMPARISON — 20×25 AUTHORITATIVE SLOW RUN
+ū_slow = 2.763 mm/s (125 mL/hr); Δt cap scaled ∝ 1/û ≈ 9e-4 s
+seed = 42 + 10000*rep + int(d*17); focusing OFF
+
+flow          state       3 µm           10 µm          50 µm
+2260_mL_hr    pristine    87.6±7.4   87.0±5.0   77.0±9.9
+2260_mL_hr    autoclaved  86.2±8.5   87.0±5.0   75.6±10.4
+125_mL_hr     pristine    84.4±8.5   80.6±7.0   0.0±0.0
+125_mL_hr     autoclaved  84.4±8.5   80.6±7.0   0.0±0.0

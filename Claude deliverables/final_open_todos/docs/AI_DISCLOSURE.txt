@@ -1,0 +1,3 @@
+AI-use disclosure (paste near main.tex line 192):
+
+Portions of simulation code, figure-generation scripts, and manuscript editing were assisted by the Cursor AI coding assistant. All physical model choices, parameter values, experimental design, data, and scientific conclusions are the author's and were verified by the author.

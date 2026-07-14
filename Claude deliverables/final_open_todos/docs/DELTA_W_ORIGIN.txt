@@ -1,0 +1,8 @@
+WHERE δ_w = 300 µm CAME FROM (paste ~line 1550)
+
+The near-wall hazard half-width δ_w = 300 µm was a round modelling choice when the
+clinical-retention layer was added (≈7.5% of the 4 mm lumen per wall) — not taken
+from a measured roughness value or a literature adhesion-layer thickness; the δ_w
+sweep shows retention tracks 2δ_w/W for sub-20 µm fragments, so the operating-point
+number is set by that geometric band and is not hiding an independent stickiness
+calibration.

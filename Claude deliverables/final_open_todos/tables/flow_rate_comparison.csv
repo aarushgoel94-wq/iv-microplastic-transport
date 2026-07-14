@@ -1,0 +1,13 @@
+flow,u_avg_mm_s,state,d_um,escape_pct_mean,escape_pct_sd,n_replicates,trials_per_rep,note
+2260_mL_hr,50.0,pristine,3.0,87.6,7.4,20,25,Table 6
+2260_mL_hr,50.0,pristine,10.0,87.0,5.0,20,25,Table 6
+2260_mL_hr,50.0,pristine,50.0,77.0,9.9,20,25,Table 6
+2260_mL_hr,50.0,autoclaved,3.0,86.2,8.5,20,25,Table 6
+2260_mL_hr,50.0,autoclaved,10.0,87.0,5.0,20,25,Table 6
+2260_mL_hr,50.0,autoclaved,50.0,75.6,10.4,20,25,Table 6
+125_mL_hr,2.763,autoclaved,3.0,84.4,8.5,20,25,20×25 Table-6 seeds; fast_mode Δt∝1/û (~9e-4 s)
+125_mL_hr,2.763,autoclaved,10.0,80.6,7.0,20,25,20×25 Table-6 seeds; fast_mode Δt∝1/û (~9e-4 s)
+125_mL_hr,2.763,autoclaved,50.0,0.0,0.0,20,25,20×25 Table-6 seeds; fast_mode Δt∝1/û (~9e-4 s)
+125_mL_hr,2.763,pristine,3.0,84.4,8.5,20,25,20×25 Table-6 seeds; fast_mode Δt∝1/û (~9e-4 s)
+125_mL_hr,2.763,pristine,10.0,80.6,7.0,20,25,20×25 Table-6 seeds; fast_mode Δt∝1/û (~9e-4 s)
+125_mL_hr,2.763,pristine,50.0,0.0,0.0,20,25,20×25 Table-6 seeds; fast_mode Δt∝1/û (~9e-4 s)
