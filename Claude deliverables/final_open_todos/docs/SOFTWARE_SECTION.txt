@@ -4,7 +4,7 @@ All simulations use a single public repository:
 
   https://github.com/aarushgoel94-wq/iv-microplastic-transport
 
-Commit SHA: 791cfdbf421e016bddfefc34be067f0abb2d5816
+Commit SHA: 2d7f1dc98877329c85d8f7c95ab1d1e0b2af7e6a
 
 Contents: microplastic_simulation.py, parameters.yaml,
 regenerate_paper_figures.py, requirements.txt, README.md, and figs/.
