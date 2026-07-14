@@ -32,7 +32,7 @@ Five Overleaf PNGs confirmed bit-identical in:
 - [x] Five PNGs confirmed in Downloads/overleaf_project/figs/ + Desktop zip
 - [x] `OVERLEAF_UPLOAD_figs.zip` on Desktop refreshed; Finder opened on zip
 - [x] Overleaf API checked — no credentials → user must drag-upload
-- [x] This pack (`SHIP_NOW.md`) written
+- [x] This pack (`SHIP_NOW.md`) written + pushed to GitHub main
 
 ### Human-only remaining
 
