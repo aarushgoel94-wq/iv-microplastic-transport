@@ -9,8 +9,10 @@ The near-wall hazard half-width δ_w = 300 µm is a modelling choice (≈ 7.5% o
 3) AI disclosure (~line 192)
 Portions of simulation code, figure-generation scripts, and manuscript editing were assisted by the Cursor AI coding assistant. All physical model choices, parameter values, experimental design, data, and scientific conclusions are the author's and were verified by the author.
 
-4) §Software URL (~line 968)
-Still needs your public GitHub URL + commit SHA after push. Template in docs/SOFTWARE_SECTION.txt.
+4) §Software URL (~line 968 / ~1019)
+https://github.com/aarushgoel94-wq/iv-microplastic-transport
+Tip (main): aead60e8b22fdf0ea1e286207277271beaf382e9
+Full paste block: docs/SOFTWARE_SECTION.txt and SHIP_NOW.md §1.
 
 5) Dr. Barge city (~line 87)
 Ask him — Deerfield, Illinois (Baxter HQ) is flagged, not confirmed.
