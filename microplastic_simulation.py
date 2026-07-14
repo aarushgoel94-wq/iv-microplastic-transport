@@ -104,12 +104,13 @@ class ClinicalRealismConfig:
         (0.60, 0.68),   # distal roller / access port
     )
     connector_rate_multiplier: float = 3.0
-    focus_enabled: bool = True
-    """If False, disable tubule centerline focusing entirely (ablation / Tier 0.4)."""
+    focus_enabled: bool = False
+    """Paper main = OFF. Set True only for Appendix A focusing ablation."""
     focus_efficiency: float = 0.88
     """
     Multiplier on the focusing blend α each step: α_eff = focus_efficiency × (1 − e^{−λdt}).
     Models imperfect wall-repulsion; 1.0 = full heuristic, 0.0 = no focusing.
+    Inert when focus_enabled is False.
     """
     use_brownian_kick: bool = True
     """If True, lateral kick uses Stokes–Einstein √(2 D Δt); if False, no lateral kick."""

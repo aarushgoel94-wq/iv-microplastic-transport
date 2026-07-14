@@ -363,71 +363,133 @@ def tier13_exponent_sensitivity(env: TubeEnvironment) -> List[dict]:
 # ---------------------------------------------------------------------------
 
 def tier21_phi_sweep(env: TubeEnvironment) -> None:
-    print("\n=== Tier 2.1: Φ_deg × Φ_wall sweep ===")
+    """
+    Paper Φ-sweep. Prefer the authoritative focusing-OFF campaign
+    (Claude deliverables/C_phi_sweep.csv: base_trials=30, N_esc_P=80,
+    ratio/Φ_deg = 0.972±0.018). Never fall back to base=20 (old N_esc_P≈51).
+    """
+    print("\n=== Tier 2.1: Φ_deg × Φ_wall sweep (paper: N_esc_P=80) ===")
     import matplotlib.pyplot as plt
 
+    auth = ROOT / "Claude deliverables" / "C_phi_sweep.csv"
     phi_degs = [1.0, 1.5, 2.0, 2.5, 3.0]
     phi_walls = [1.0, 1.5, 1.75, 2.0, 2.5]
-    base = 20  # trials per size; contour shape is robust to n
-    ratio_grid = np.zeros((len(phi_walls), len(phi_degs)))
     rows = []
+    ratio_grid = np.zeros((len(phi_walls), len(phi_degs)))
 
-    for i, pw in enumerate(phi_walls):
-        for j, pd in enumerate(phi_degs):
-            # Pristine: degradation=1, wear=1; Autoclaved-like: scale injection & wear
-            cfg_p = make_config(degraded_tubing_multiplier=1.0)
-            cfg_a = make_config(degraded_tubing_multiplier=pw)
-
-            # Build synthetic profiles with given degradation factor
-            prof_p = ContainerProfile(
-                key="pristine", display_name="P", comparison_label="P",
-                degradation_factor=1.0,
-                size_weights={3.0: 1.0, 10.0: 1.0, 50.0: 1.0},
-            )
-            # Autoclaved size skew preserved; only Φ_deg scales total count
-            prof_a = ContainerProfile(
-                key="autoclaved", display_name="A", comparison_label="A",
-                degradation_factor=pd,
-                size_weights={3.0: 2.8, 10.0: 2.2, 50.0: 0.35},
-            )
-            rp = run_campaign(env, prof_p, base_trials=base, seed=SEED, clinical=cfg_p, traj_n=0)
-            ra = run_campaign(env, prof_a, base_trials=base, seed=SEED + 1, clinical=cfg_a, traj_n=0)
-            n_esc_p = rp["total_escaped"]
-            n_esc_a = ra["total_escaped"]
-            ratio = n_esc_a / n_esc_p if n_esc_p else float("nan")
-            ratio_grid[i, j] = ratio
-            rows.append({
-                "phi_deg": pd, "phi_wall": pw,
-                "N_esc_P": n_esc_p, "N_esc_A": n_esc_a, "ratio_A_over_P": round(ratio, 3),
-            })
-            print(f"  Φ_deg={pd}, Φ_wall={pw}: N_esc A/P = {ratio:.2f}")
+    if auth.exists():
+        print(f"  Loading authoritative sweep → {auth}")
+        with auth.open() as f:
+            for row in csv.DictReader(f):
+                pd, pw = float(row["phi_deg"]), float(row["phi_wall"])
+                n_p, n_a = int(float(row["N_esc_P"])), int(float(row["N_esc_A"]))
+                ratio = float(row["ratio"])
+                rows.append({
+                    "phi_deg": pd, "phi_wall": pw,
+                    "N_esc_P": n_p, "N_esc_A": n_a, "ratio_A_over_P": round(ratio, 3),
+                })
+                ratio_grid[phi_walls.index(pw), phi_degs.index(pd)] = ratio
+        n_p0 = rows[0]["N_esc_P"]
+        if n_p0 != 80:
+            raise SystemExit(f"Authoritative C_phi_sweep has N_esc_P={n_p0}, expected 80")
+        rs = [r["ratio_A_over_P"] / r["phi_deg"] for r in rows]
+        print(f"  N_esc_P={n_p0}; ratio/Φ_deg = {np.mean(rs):.3f}±{np.std(rs, ddof=1):.3f}")
+    else:
+        # Recompute at the paper setting (base=30, focusing OFF) — NOT base=20.
+        base = 30
+        for i, pw in enumerate(phi_walls):
+            for j, pd in enumerate(phi_degs):
+                cfg_p = make_config(focus_enabled=False, degraded_tubing_multiplier=1.0)
+                cfg_a = make_config(focus_enabled=False, degraded_tubing_multiplier=pw)
+                prof_p = ContainerProfile(
+                    key="pristine", display_name="P", comparison_label="P",
+                    degradation_factor=1.0,
+                    size_weights={3.0: 1.0, 10.0: 1.0, 50.0: 1.0},
+                )
+                prof_a = ContainerProfile(
+                    key="autoclaved", display_name="A", comparison_label="A",
+                    degradation_factor=pd,
+                    size_weights={3.0: 2.8, 10.0: 2.2, 50.0: 0.35},
+                )
+                rp = run_campaign(env, prof_p, base_trials=base, seed=SEED, clinical=cfg_p, traj_n=0)
+                ra = run_campaign(env, prof_a, base_trials=base, seed=SEED, clinical=cfg_a, traj_n=0)
+                n_esc_p = rp["total_escaped"]
+                n_esc_a = ra["total_escaped"]
+                ratio = n_esc_a / n_esc_p if n_esc_p else float("nan")
+                ratio_grid[i, j] = ratio
+                rows.append({
+                    "phi_deg": pd, "phi_wall": pw,
+                    "N_esc_P": n_esc_p, "N_esc_A": n_esc_a, "ratio_A_over_P": round(ratio, 3),
+                })
+                print(f"  Φ_deg={pd}, Φ_wall={pw}: N_esc A/P = {ratio:.2f} (N_P={n_esc_p})")
 
     write_csv(OUT / "tables" / "phi_sweep.csv", rows)
 
     fig, ax = plt.subplots(figsize=(7, 5.5))
     im = ax.imshow(ratio_grid, origin="lower", cmap="RdYlGn", aspect="auto",
-                   vmin=0.8, vmax=max(2.5, float(np.nanmax(ratio_grid))))
+                   vmin=0.8, vmax=max(3.0, float(np.nanmax(ratio_grid))))
     ax.set_xticks(range(len(phi_degs)))
     ax.set_xticklabels([str(x) for x in phi_degs])
     ax.set_yticks(range(len(phi_walls)))
     ax.set_yticklabels([str(y) for y in phi_walls])
     ax.set_xlabel(r"Polymer degradation $\Phi_{\mathrm{deg}}$")
     ax.set_ylabel(r"Wall stickiness $\Phi_{\mathrm{wall}}$")
-    ax.set_title(r"$N_{\mathrm{esc}}(A)/N_{\mathrm{esc}}(P)$ — leakier polymer vs stickier wall")
+    ax.set_title(
+        r"$N_{\mathrm{esc}}(A)/N_{\mathrm{esc}}(P)$ — focusing OFF (vertical = $\Phi_{\mathrm{wall}}$ inert)"
+    )
     for i in range(len(phi_walls)):
         for j in range(len(phi_degs)):
             ax.text(j, i, f"{ratio_grid[i, j]:.2f}", ha="center", va="center", fontsize=9)
-    # operating point
-    op_j = phi_degs.index(2.5)
-    op_i = phi_walls.index(1.75)
+    op_j, op_i = phi_degs.index(2.5), phi_walls.index(1.75)
     ax.scatter([op_j], [op_i], s=200, facecolors="none", edgecolors="k", lw=2, label="operating point")
     ax.legend(loc="upper left")
     fig.colorbar(im, ax=ax, label="escaped-count ratio A/P")
-    # break-even contour hint
     ax.contour(ratio_grid, levels=[1.0], colors="k", linewidths=1.5, origin="lower")
     fig.tight_layout()
-    fig.savefig(OUT / "figures" / "fig_phi_sweep_contour.png", dpi=160, bbox_inches="tight")
+    figs_dir = ROOT / "figs"
+    figs_dir.mkdir(exist_ok=True)
+    for dest in (
+        OUT / "figures" / "fig_phi_sweep.png",
+        OUT / "figures" / "fig_phi_sweep_contour.png",
+        figs_dir / "fig_phi_sweep.png",
+    ):
+        fig.savefig(dest, dpi=160, bbox_inches="tight")
     plt.close(fig)
+    print("  wrote fig_phi_sweep.png (N_esc_P from authoritative C_phi_sweep.csv)")
+
+
+def ship_paper_figs() -> None:
+    """Ensure the five Overleaf filenames exist under figs/."""
+    required = [
+        "fig_phi_sweep.png",
+        "fig_sub20_escaped_counts.png",
+        "fig_delta_w_retention.png",
+        "trajectory_exaggerated_pristine.png",
+        "trajectory_exaggerated_autoclaved.png",
+    ]
+    figs = ROOT / "figs"
+    figs.mkdir(exist_ok=True)
+    sources = [
+        figs,
+        OUT / "figures",
+        ROOT / "Claude deliverables" / "final_open_todos" / "figures",
+        ROOT / "PAPER_ATTACHMENTS",
+    ]
+    for name in required:
+        dest = figs / name
+        if dest.exists() and dest.stat().st_size > 1000:
+            print(f"  figs/{name} OK ({dest.stat().st_size} B)")
+            continue
+        found = None
+        for src_dir in sources:
+            cand = src_dir / name
+            if cand.exists() and cand.stat().st_size > 1000:
+                found = cand
+                break
+        if found is None:
+            raise SystemExit(f"Missing paper figure: {name}")
+        shutil.copy2(found, dest)
+        print(f"  shipped {name} ← {found}")
 
 
 # ---------------------------------------------------------------------------
@@ -705,6 +767,7 @@ def main() -> int:
     rep_rows = tier11_replicates(env)
     tier13_exponent_sensitivity(env)
     tier21_phi_sweep(env)
+    ship_paper_figs()
 
     write_static_docs(main_results, focus_rows, rep_rows)
     write_master_readme()
