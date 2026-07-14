@@ -4,7 +4,7 @@ Open this file. Paste blocks in order. Do **not** invent USP edition numbers. Do
 
 Live public repo confirmed HTTP 200:
 `https://github.com/aarushgoel94-wq/iv-microplastic-transport`
-Tip SHA (main): `6ababdd7b8a9bd5f40ab63000f38aaa739768774`
+Tip SHA (main): `72fcde748ae3b0cd9b46d66c7d858669c765f0e9`
 
 Five Overleaf PNGs confirmed bit-identical in:
 - `~/Downloads/overleaf_project/figs/`
@@ -52,7 +52,7 @@ All simulations use a single public repository:
 
   https://github.com/aarushgoel94-wq/iv-microplastic-transport
 
-Tip commit (main): aead60e8b22fdf0ea1e286207277271beaf382e9
+Tip commit (main): 72fcde748ae3b0cd9b46d66c7d858669c765f0e9
 
 Contents: microplastic_simulation.py, parameters.yaml,
 regenerate_paper_figures.py, requirements.txt, README.md, and figs/
