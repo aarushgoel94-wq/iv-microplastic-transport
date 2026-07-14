@@ -1,0 +1,118 @@
+RERUN SPEC RESULTS — focusing OFF (paper main)
+Generated: 2026-07-14T03:04:33+00:00
+
+========================================================================
+(A) THE BUG TEST — focusing OFF, same seed, vary only w
+========================================================================
+
+w=1.00  -> stuck: 3um=7/50  10um=3/50  50um=8/50   total=18/150
+w=1.75  -> stuck: 3um=8/50  10um=3/50  50um=9/50   total=20/150
+w=2.50  -> stuck: 3um=8/50  10um=3/50  50um=10/50   total=21/150
+
+VERDICT: total RISES with w (weakly). w reaches the hazard. Proceed.
+NOTE: rise is small (near-saturation of clinical hazard for near-wall trajectories).
+      Hydrodynamic wall captures are w-independent and dominate part of the count.
+
+========================================================================
+(B) MAIN RESULTS — focusing OFF, both states
+========================================================================
+
+state       d_um   n     escaped  stuck   escape%   wilson_lo  wilson_hi
+pristine    3      50    43       7       86.0      73.8       93.0
+pristine    10     50    42       8       84.0      71.5       91.7
+pristine    50     50    42       8       84.0      71.5       91.7
+autoclaved  3      196   176      20      89.8      84.8       93.3
+autoclaved  10     154   134      20      87.0      80.8       91.4
+autoclaved  50     25    22       3       88.0      70.0       95.8
+
+Mechanism breakdown (bulk adhesion column dropped — identically zero):
+state       d_um   hydrodynamic  near_wall_adhesion  connector  defect
+pristine    3      0             2                   4          1
+pristine    10     0             4                   4          0
+pristine    50     3             1                   4          0
+autoclaved  3      0             12                  7          1
+autoclaved  10     0             11                  8          1
+autoclaved  50     1             0                   2          0
+
+Replicates (20 × 25 trials/cell, focusing OFF):
+state       d_um   escape%_mean   escape%_sd   n_replicates
+pristine    3      87.6          7.4         20
+pristine    10     87.0          5.0         20
+pristine    50     77.0          9.9         20
+autoclaved  3      86.2          8.5         20
+autoclaved  10     87.0          5.0         20
+autoclaved  50     75.6          10.4        20
+
+========================================================================
+(C) Φ-SWEEP — focusing OFF
+========================================================================
+
+phi_deg  phi_wall  N_esc_P  N_esc_A  ratio    ratio/phi_deg
+1.0      1.00      80       80       1.000    1.0000
+1.0      1.50      80       79       0.988    0.9875
+1.0      1.75      80       79       0.988    0.9875
+1.0      2.00      80       79       0.988    0.9875
+1.0      2.50      80       79       0.988    0.9875
+1.5      1.00      80       114      1.425    0.9500
+1.5      1.50      80       113      1.413    0.9417
+1.5      1.75      80       113      1.413    0.9417
+1.5      2.00      80       113      1.413    0.9417
+1.5      2.50      80       113      1.413    0.9417
+2.0      1.00      80       155      1.938    0.9688
+2.0      1.50      80       154      1.925    0.9625
+2.0      1.75      80       154      1.925    0.9625
+2.0      2.00      80       154      1.925    0.9625
+2.0      2.50      80       154      1.925    0.9625
+2.5      1.00      80       196      2.450    0.9800
+2.5      1.50      80       195      2.438    0.9750
+2.5      1.75      80       195      2.438    0.9750
+2.5      2.00      80       195      2.438    0.9750
+2.5      2.50      80       195      2.438    0.9750
+3.0      1.00      80       239      2.987    0.9958
+3.0      1.50      80       237      2.962    0.9875
+3.0      1.75      80       237      2.962    0.9875
+3.0      2.00      80       236      2.950    0.9833
+3.0      2.50      80       236      2.950    0.9833
+
+ratio/phi_deg: mean=0.9721  sd=0.0175  min=0.9417  max=1.0000
+SANITY: ratio/phi_deg is nearly CONSTANT → Φ_wall still does almost nothing.
+CAUSE: near-wall clinical hazard is near-saturated at w=1 for particles that
+enter the 300 µm wall band; off-band particles never meet a surface.
+Retention ≈ geometric inlet fraction in the near-wall band (~15%), not Φ_wall.
+
+========================================================================
+(D) focus_efficiency = 0.88 — what it does
+========================================================================
+
+When focus_enabled=True, each step computes focusing blend
+  α = 1 − exp(−λ_focus · Δt)
+then applies
+  α_eff = focus_efficiency · α = 0.88 · α
+before moving y toward the centerline: y ← y + α_eff (y_c − y).
+
+It is NOT a physical force. It is a heuristic imperfect-tracking factor.
+With focus_enabled=False (paper MAIN), focus_efficiency is inert / unused.
+For the main paper tables above, it can be ignored. Keep it only for the
+focusing-ON appendix ablation, or delete it if you drop that appendix.
+
+========================================================================
+(E) SENSITIVITY — size-snag exponent α
+========================================================================
+
+alpha   pristine_escape%(3/10/50)   autoclaved_escape%(3/10/50)
+0.0     86 / 94 / 84                84 / 94 / 84
+0.35    86 / 94 / 84                84 / 94 / 82
+0.5     86 / 94 / 82                84 / 94 / 80
+1.0     86 / 94 / 80                84 / 94 / 80
+
+CONCLUSION HOLD across α ∈ {0, 0.35, 0.5, 1}: sub-20 µm escape stays high;
+the 0.35 empirical exponent objection dies.
+
+========================================================================
+INTERPRETATION (aim at this)
+========================================================================
+With focusing OFF, retention is largely set by inlet lateral position:
+the 300 µm near-wall band ≈ 15% of the 4 mm channel. Particles seeded there
+stay there (St ≤ 10⁻⁴) and are retained; others escape. Size gradient is weak.
+Φ_wall barely moves outcomes once clinical capture is saturated in that band.
+Autoclaving still increases PATIENT BURDEN via Φ_deg (more fragments injected).
