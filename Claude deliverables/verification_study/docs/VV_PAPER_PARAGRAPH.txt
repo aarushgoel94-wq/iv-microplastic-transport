@@ -1,0 +1,1 @@
+The Stokes integrator was verified against the closed-form buoyant-sphere solution (machine-precision agreement for all tested Δt); clinical escape fractions were shown to be independent of Δt across the geometric-accuracy window used in the campaign; comparison to measured patient-line particle counts (external validation) is left for future work.

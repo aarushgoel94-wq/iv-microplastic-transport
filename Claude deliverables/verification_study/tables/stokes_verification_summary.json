@@ -1,0 +1,8 @@
+{
+  "case": "unbounded Stokes + buoyancy, still fluid",
+  "diameter_um": 50.0,
+  "beta_per_s": 7955.801104972378,
+  "v_terminal_mm_s": 0.12943749999999996,
+  "max_rel_err_across_all_dt": 1.0120839238599893e-15,
+  "verdict": "PASS \u2014 numerical trajectory matches the closed-form Stokes solution to machine precision for every tested \u0394t (exact update, not Euler)."
+}

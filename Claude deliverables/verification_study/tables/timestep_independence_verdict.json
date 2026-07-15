@@ -1,0 +1,8 @@
+{
+  "n_trials": 25,
+  "diameter_um": 10.0,
+  "escape_pct_span_for_dt_le_5e-4": 0.0,
+  "paper_dt_cap_s": 5e-05,
+  "escape_at_paper_dt": 92.0,
+  "verdict": "Escape fraction varies by 0.0 pp across \u0394t \u2264 5\u00d710\u207b\u2074 s (paper cap 5\u00d710\u207b\u2075 s \u2192 92.0%). Outcome is timestep-independent in the geometric-accuracy regime; coarser \u0394t eventually drifts when wall-clearance sampling degrades."
+}
